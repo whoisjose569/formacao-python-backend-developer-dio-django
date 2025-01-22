@@ -2,10 +2,26 @@ from django.http import Http404, HttpResponse
 from .models import Question
 from django.shortcuts import render, get_object_or_404
 
+from django import template
+
+register = template.Library()
+
+@register.filter
+def add_emoji(texto):
+    return f"{texto} 😊"
+
+faculdade = {"Unimar", "Univem"}
+endereco = {"cidade": "Ubirajara",
+            "estado": "SP"
+        }
+
 def index(request):
     latest_question_list = Question.objects.order_by("-pub_date")[:5]
     context = {
         "latest_question_list": latest_question_list,
+        "emoji": add_emoji("BEM VINDO"),
+        "faculdades": faculdade,
+        "endereco": endereco
     }
     return render(request, "polls/index.html", context)
 
